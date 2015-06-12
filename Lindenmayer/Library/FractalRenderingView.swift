@@ -29,7 +29,8 @@ import QuartzCore
 ////////////////////////////////////////////////////////////////////////////////
 class FractalRenderingView : UIView, Renderer {
     
-    let path:  UIBezierPath
+    var path:  UIBezierPath
+    let drawLayer: CAShapeLayer
     
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
@@ -38,8 +39,15 @@ class FractalRenderingView : UIView, Renderer {
         self.path  = UIBezierPath()
         self.path.lineWidth = 1.0
         
+        self.drawLayer = CAShapeLayer()
+        self.drawLayer.path = self.path.CGPath
+        self.drawLayer.strokeColor = UIColor(red: 39.0/255.0, green: 133.0/255.0, blue: 252.0/255.0, alpha: 1.0).CGColor
+        self.drawLayer.lineWidth = 1.0
+        self.drawLayer.fillColor = UIColor.clearColor().CGColor
+        
         super.init(frame: frame)
 
+        self.layer.addSublayer(self.drawLayer)
         self.backgroundColor = UIColor(red: 57.0/255.0, green: 57.0/255.0, blue: 57.0/255.0, alpha: 1.0)
     }
 
@@ -64,7 +72,27 @@ class FractalRenderingView : UIView, Renderer {
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
     func render() {
-        self.setNeedsDisplay()
+        CATransaction.setDisableActions(true)
+        self.drawLayer.path = self.path.CGPath
+        self.drawLayer.strokeStart = 0.0
+        self.drawLayer.strokeEnd = 0.0
+        CATransaction.setDisableActions(false)
+
+        let path = CABasicAnimation(keyPath: "path")
+        let strokeStartAnimation = CABasicAnimation(keyPath: "strokeStart")
+        let strokeEndAnimation = CABasicAnimation(keyPath: "strokeEnd")
+
+        strokeStartAnimation.fromValue = 0.0
+        strokeEndAnimation.toValue = 1.0
+
+        let group = CAAnimationGroup()
+        group.animations = [path, strokeStartAnimation, strokeEndAnimation]
+        group.duration = 2.0
+        group.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        group.fillMode = kCAFillModeBoth
+        group.removedOnCompletion = false
+        
+        self.drawLayer.addAnimation(group, forKey: "AnimateStroke")
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -75,8 +103,16 @@ class FractalRenderingView : UIView, Renderer {
     
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
-    override func drawRect(rect: CGRect) {
-        UIColor(red: 39.0/255.0, green: 133.0/255.0, blue: 252.0/255.0, alpha: 1.0).setStroke()
-        self.path.stroke()
+//    override func drawRect(rect: CGRect) {
+//        UIColor(red: 39.0/255.0, green: 133.0/255.0, blue: 252.0/255.0, alpha: 1.0).setStroke()
+//        self.path.stroke()
+//    }
+    
+    // MARK: CAAnimationDelegate
+    
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    override func animationDidStop(anim: CAAnimation, finished flag: Bool) {
+        
     }
 }
