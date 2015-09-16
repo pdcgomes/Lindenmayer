@@ -1,5 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict/>
+<array>
+	<dict>
+		<key>Name</key>
+		<string>Dragon Curve</string>
+		<key>String</key>
+		<string>XF</string>
+		<key>Step</key>
+		<integer>3</integer>
+		<key>Angle</key>
+		<integer>90</integer>
+		<key>Iterations</key>
+		<integer>13</integer>
+		<key>Rules</key>
+		<dict>
+			<key>X</key>
+			<string>X+YF+</string>
+			<key>Y</key>
+			<string>-FX-Y</string>
+		</dict>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Seaweed</string>
+		<key>String</key>
+		<string>F</string>
+		<key>Step</key>
+		<integer>10</integer>
+		<key>Angle</key>
+		<integer>22</integer>
+		<key>Iterations</key>
+		<integer>4</integer>
+		<key>Rules</key>
+		<dict>
+			<key>Y</key>
+			<string>-FX-Y</string>
+		</dict>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Plant</string>
+		<key>String</key>
+		<string>X</string>
+		<key>Step</key>
+		<integer>3</integer>
+		<key>Angle</key>
+		<integer>25</integer>
+		<key>Iterations</key>
+		<integer>6</integer>
+		<key>Rules</key>
+		<dict>
+			<key>X</key>
+			<string>F-[[X]+X]+F[+FX]-X</string>
+			<key>F</key>
+			<string>FF</string>
+		</dict>
+	</dict>
+</array>
 </plist>
