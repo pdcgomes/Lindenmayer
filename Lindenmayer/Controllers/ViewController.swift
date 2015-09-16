@@ -10,28 +10,48 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var renderer: FractalRenderingView?
+    @IBOutlet weak var renderer: FractalRenderingView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        let frame = CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))
-        self.renderer = FractalRenderingView(frame: frame)
-       
-        self.view.addSubview(self.renderer!)
+//        let frame = CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))
+//        self.renderer = FractalRenderingView(frame: frame)
+//       
+//        self.view.addSubview(self.renderer!)
     }
     
     override func viewDidAppear(animated: Bool) {
  
-        let parser = Parser(spec: [
-            "String": "XF",
-            "Rules": [
-                "X": "X+YF+",
-                "Y": "-FX-Y"],
-            "Step": 3,
-            "Angle": 90,
-            "Iterations": 12
-            ])
+        guard let fileURL = NSBundle.mainBundle().URLForResource("Templates", withExtension: "plist") else {
+            return
+        }
+        
+        let loader = Loader(file: fileURL)
+        do {
+            let template = try loader.load()
+            let parser = Parser(spec: template!)
+            let definition = parser.parse()
+            
+            let interpreter = Interpreter(renderer: self.renderer!)
+            interpreter.run(definition)
+
+            self.renderer?.render()
+
+        }
+        catch {
+            
+        }
+        
+//        let parser = Parser(spec: [
+//            "String": "XF",
+//            "Rules": [
+//                "X": "X+YF+",
+//                "Y": "-FX-Y"],
+//            "Step": 3,
+//            "Angle": 90,
+//            "Iterations": 12
+//            ])
 //        let parser = Parser(spec: [
 //            "String": "XF",
 //            "Rules": [
@@ -42,12 +62,12 @@ class ViewController: UIViewController {
 //            "Iterations": 8
 //            ])
         
-        let definition = parser.parse()
-
-        let interpreter = Interpreter(renderer: self.renderer!)
-        interpreter.run(definition)
-        
-        self.renderer?.render()
+//        let definition = parser.parse()
+//
+//        let interpreter = Interpreter(renderer: self.renderer!)
+//        interpreter.run(definition)
+//        
+//        self.renderer?.render()
     }
 
     override func didReceiveMemoryWarning() {
