@@ -65,8 +65,14 @@ class Parser {
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
     private func buildCommandListFromInstructions(string: String) -> [Command] {
+//        let commands: [Command] = string.characters.map { (char) -> Command? in
+//            Command(rawValue: String(char))
+//        }.filter { $0 != nil }
+//        
+//        return commands
+//
         var commandList = [Command]()
-        
+
         for char in string.characters {
             if let command = Command(rawValue: String(char)) {
                 commandList.append(command)
