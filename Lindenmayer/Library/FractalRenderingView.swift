@@ -10,20 +10,42 @@ import UIKit
 import QuartzCore
 
 //extension UIColor : RawRepresentable {
-//    var rawValue: Int {
+//    public var rawValue: Int {
 //        get {
 //            return 1
 //        }
+//        set {}
 //    }
 //
-//    init?(rawValue: Self.RawValue) {
-//        
+//    convenience init?(rawValue: Int) {
+//        self.init()
+//        self.rawValue = rawValue
+//
 //    }
 //}
 //
 //enum Colors : UIColor {
 //    case BackgroundColor = UIColor(red: 57.0/255.0, green: 57.0/255.0, blue: 57.0/255.0, alpha: 1.0).rawValue
 //}
+
+class Color : UIColor,  IntegerLiteralConvertible {
+    required init(integerLiteral value: IntegerLiteralType) {
+        //code to set values from int ...
+        
+        let red     = (value >> 16) & 0xFF
+        let green   = (value >>  8) & 0xFF
+        let blue    = (value >>  0) & 0xFF
+        
+        super.init(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: 1.0)
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    required convenience init(colorLiteralRed red: Float, green: Float, blue: Float, alpha: Float) {
+        fatalError("init(colorLiteralRed:green:blue:alpha:) has not been implemented")
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -34,8 +56,7 @@ class FractalRenderingView : UIView, Renderer {
     
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
-    override init(frame: CGRect) {
-
+    required init?(coder aDecoder: NSCoder) {
         self.path  = UIBezierPath()
         self.path.lineWidth = 1.0
         
@@ -44,15 +65,12 @@ class FractalRenderingView : UIView, Renderer {
         self.drawLayer.strokeColor = UIColor(red: 39.0/255.0, green: 133.0/255.0, blue: 252.0/255.0, alpha: 1.0).CGColor
         self.drawLayer.lineWidth = 1.0
         self.drawLayer.fillColor = UIColor.clearColor().CGColor
+        self.drawLayer.anchorPoint = CGPointMake(0.5, 0.5)
         
-        super.init(frame: frame)
-
+        super.init(coder: aDecoder)
+        
         self.layer.addSublayer(self.drawLayer)
         self.backgroundColor = UIColor(red: 57.0/255.0, green: 57.0/255.0, blue: 57.0/255.0, alpha: 1.0)
-    }
-
-    required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     ////////////////////////////////////////////////////////////////////////////////

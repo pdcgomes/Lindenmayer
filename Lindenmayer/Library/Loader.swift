@@ -18,12 +18,18 @@ class Loader {
         self.file = file
     }
     
-    func load() throws -> [NSObject: AnyObject]? {
-        try self.file.checkResourceIsReachable()
+    func load() throws -> [String: AnyObject]? {
+        let error: NSErrorPointer = nil
+        let success = self.file.checkResourceIsReachableAndReturnError(error)
 
-        if let dict = NSDictionary(contentsOfURL: self.file) as? [NSObject: AnyObject] {
-            return dict
+        guard success == true else { return nil }
+        
+        if let templates = NSArray(contentsOfURL: self.file) as? [AnyObject] {
+            return templates[2] as? [String: AnyObject]
         }
+//        if let dict = NSDictionary(contentsOfURL: self.file) as? [String: AnyObject] {
+//            return dict
+//        }
         return nil
     }
 }
